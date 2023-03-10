@@ -42,29 +42,33 @@ def gui():
             ]
 
     window = sg.Window(app_name, layout)
-
-    while True:
+    b_do_it = True
+    while b_do_it:
         event, values = window.read()
-        if event == 'bGO':
-            tags = window['Tags'].Get()
-            facebook_tags = split_tags(tags, ',', False, True)
+        if event:
+            if event == 'bGO':
+                tags = window['Tags'].Get()
+                facebook_tags = split_tags(tags, ',', False, True)
 
-            window['tYT'].update(split_tags(tags, ',', False, False))
-            window['tTT'].update(window['Title'].Get() + ' ' + split_tags(tags, '#', True, False))
-            i = 0
-            for tag in facebook_tags:
-                if i >= 8:
-                    break
-                i += 1
-                window['tFB'+ str(i)].update(tag.strip())
-        # elif event[1] == 'b':  # a button clicked
-        #     sg.clipboard_set(window['t' + event[1:]].Get()) # get associated text field value
-        if event == 'bYT':  # YouTube button clicked
-            sg.clipboard_set(window['tYT'].Get()) # get associated text field value
-        if event == 'bTT':  # TikTok button clicked
-            sg.clipboard_set(window['tTT'].Get()) # get associated text field value
-        if event[:-1] == 'bFB':  # Facebook button clicked
-            sg.clipboard_set(window['tFB' + event[-1]].Get()) # get associated text field value
+                window['tYT'].update(split_tags(tags, ',', False, False))
+                window['tTT'].update(window['Title'].Get() + ' ' + split_tags(tags, '#', True, False))
+                i = 0
+                for tag in facebook_tags:
+                    if i >= 8:
+                        break
+                    i += 1
+                    window['tFB'+ str(i)].update(tag.strip())
+            # elif event[1] == 'b':  # a button clicked
+            #     sg.clipboard_set(window['t' + event[1:]].Get()) # get associated text field value
+            if event == 'bYT':  # YouTube button clicked
+                sg.clipboard_set(window['tYT'].Get()) # get associated text field value
+            if event == 'bTT':  # TikTok button clicked
+                sg.clipboard_set(window['tTT'].Get()) # get associated text field value
+            if event[:-1] == 'bFB':  # Facebook button clicked
+                sg.clipboard_set(window['tFB' + event[-1]].Get()) # get associated text field value
+        else:
+            b_do_it = False
+
 
 def split_tags(text, hash, singles, facebook):
     tags = text.split(',')
