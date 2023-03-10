@@ -22,7 +22,7 @@ def gui():
                 [sg.InputText(key='tTT')],
                 [sg.Button('Copy', key='bTT')],
 
-                [sg.Text('Facebook', font=("Helvetica", 15))],
+                [sg.Text('Facebook & Patreon', font=("Helvetica", 15))],
                 [sg.InputText(key='tFB1')],
                 [sg.Button('Copy', key='bFB1')],
                 [sg.InputText(key='tFB2')],
@@ -39,17 +39,11 @@ def gui():
                 [sg.Button('Copy', key='bFB7')],
                 [sg.InputText(key='tFB8')],
                 [sg.Button('Copy', key='bFB8')],
-
-                [sg.Text('Patreon', font=("Helvetica", 15))],
-                [sg.InputText(key='tPA')],
-                [sg.Button('Copy', key='bPA')],
-
-                [sg.Submit(), sg.Cancel()]
             ]
 
     window = sg.Window(app_name, layout)
-    bDoit = True
-    while bDoit:
+
+    while True:
         event, values = window.read()
         if event == 'bGO':
             tags = window['Tags'].Get()
@@ -57,32 +51,20 @@ def gui():
 
             window['tYT'].update(split_tags(tags, ',', False, False))
             window['tTT'].update(window['Title'].Get() + ' ' + split_tags(tags, '#', True, False))
-            window['tFB1'].update(facebook_tags[0])
-            window['tFB2'].update(facebook_tags[1])
-            window['tFB3'].update(facebook_tags[2])
-            window['tFB4'].update(facebook_tags[3])
-            window['tFB5'].update(facebook_tags[4])
-            window['tFB6'].update(facebook_tags[5])
-            window['tFB7'].update(facebook_tags[6])
-            window['tFB8'].update(facebook_tags[7])
-            window['tPA'].update(split_tags(tags, '#', True, False))
+            i = 0
+            for tag in facebook_tags:
+                if i >= 8:
+                    break
+                i += 1
+                window['tFB'+ str(i)].update(tag.strip())
         # elif event[1] == 'b':  # a button clicked
         #     sg.clipboard_set(window['t' + event[1:]].Get()) # get associated text field value
-        if event[1] == 'bYT':  # YouTube button clicked
+        if event == 'bYT':  # YouTube button clicked
             sg.clipboard_set(window['tYT'].Get()) # get associated text field value
-        if event[1] == 'bTT':  # YouTube button clicked
+        if event == 'bTT':  # TikTok button clicked
             sg.clipboard_set(window['tTT'].Get()) # get associated text field value
-        if event[1] == 'bTW':  # YouTube button clicked
-            sg.clipboard_set(window['tFB'].Get()) # get associated text field value
-        if event[1] == 'bPA':  # YouTube button clicked
-            sg.clipboard_set(window['tPA'].Get()) # get associated text field value
-        # sg.popup('Title',
-        #         'The results of the window.',
-        #         'The button clicked was "{}"'.format(event),
-        #         'The values are', values)
-
-        if event == 'Submit' or event == 'Cancel':
-            bDoit = False
+        if event[:-1] == 'bFB':  # Facebook button clicked
+            sg.clipboard_set(window['tFB' + event[-1]].Get()) # get associated text field value
 
 def split_tags(text, hash, singles, facebook):
     tags = text.split(',')
